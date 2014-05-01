@@ -1,0 +1,38 @@
+{% include "hellosign/header.html" with title="HelloSign Python Examples" %}
+{% load staticfiles %}
+
+
+    <div class="container">
+      <div class="bs-docs-section">
+
+        <div class="jumbotron">
+          <h2>HelloSign Python Examples</h2>
+          <p class="intro">
+            You may be interested in the following:
+              <ul>
+                <li><a href="http://hellosign-python-sdk.readthedocs.org/en/latest/">API Documentation</a></li>
+                <li>Demos
+                  <ul>
+                    <li><a href="/embedded_signing">Embedded Signing</a></li>
+                    <li><a href="/embedded_requesting">Embedded Requesting</a></li>
+                    <li><a href="/embedded_template_requesting">Embedded Requesting from a Template</a></li>
+                    <li><a href="/oauth">OAuth Demo</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </p>
+        </div>
+        {% include "hellosign/footer.html" %}
+
+
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootswatch.js' %}"></script>
+  </body>
+</html>
+
+

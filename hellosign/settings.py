@@ -1,0 +1,7 @@
+import os
+
+API_KEY='e4a47c3309daae65033cb4783987a45dd91f5c6acc82b2726babe15db440a480'
+
+CLIENT_ID = 'eb81fe09f06a24aa37fe54535ce55d00'
+SECRET = '9857ea2b125f2e8c4e9b4335e56bbfa2'
+

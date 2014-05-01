@@ -1,0 +1,6 @@
+import os
+
+API_KEY = os.environ['HELLOSIGN_API_KEY']
+
+CLIENT_ID = os.environ['HELLOSIGN_CLIENT_ID']
+SECRET = os.environ['HELLOSIGN_SECRET']

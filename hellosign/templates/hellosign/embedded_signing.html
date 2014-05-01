@@ -1,0 +1,85 @@
+{% include "hellosign/header.html" with title="Embedded Signing Demo" %}
+{% load staticfiles %}
+
+
+    <div class="container">
+      <div class="bs-docs-section">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-header">
+              <h1 id="type">Embedded Signing Demo</h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- Headings -->
+
+        <div class="row">
+          <div class="col-lg-12">
+            <p>This page demonstrates how you can add an embedded signature request to your Java-based web application.</p>
+            <h2>Before You Begin</h2>
+            <div class="well">
+              <ol>
+                <li>Obtain an API key.<br>Sign up for an API plan <a href="https://www.hellosign.com/api/pricing">here</a>. Adding embedded signing to your website requires a Silver or Gold API plan. However, you can test the functionality for free by creating signature requests in test mode.</li>
+                <li>Obtain a Client ID.<br>Sign up for a Client ID for your application <a href="https://www.hellosign.com/oauth/createAppForm">here</a>.</li>
+                <li>Set the API key and Client ID in the settings file:
+                  <pre>hellosign/settings.py</pre>
+                </li>
+              </ol>
+            </div>
+            <h2>Try It Out</h2>
+            <p>Please sign our NDA.</p>
+            {% if error_message %}
+            <div class="alert alert-dismissable alert-warning">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              {{ error_message }}
+            </div>
+            {% endif %}
+            <div class="col-lg-8">
+              <form class="form-horizontal" action="{% url 'embedded_signing' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <div class="col-lg-6">
+                    <input class="form-control" type="text" name="name" placeholder="Your name">
+                  </div>
+                  <div class="col-lg-6">
+                    <input class="form-control" type="text" name="email" placeholder="Your email">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-lg-6">
+                    <button type="submit" class="btn btn-primary btn-sm">Launch Demo</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% include "hellosign/footer.html" %}
+
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootswatch.js' %}"></script>
+    {% if sign_url %}
+    <script type="text/javascript" src="//s3.amazonaws.com/cdn.hellofax.com/js/embedded.js"></script>
+    <script type="text/javascript">
+        function openSigningDialog() {
+            HelloSign.init("{{ client_id }}");
+            HelloSign.open({
+                url: "{{ sign_url|safe }}"
+            });
+        }
+        $( document ).ready(function() {
+          openSigningDialog();
+        });
+    </script>
+    {% endif %}
+  </body>
+</html>
+
+

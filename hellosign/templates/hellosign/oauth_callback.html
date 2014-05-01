@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>OAuth Callback Demo | HelloSign</title>
+    </head>
+    <body>
+        {% if error_message %}
+        <div class="alert alert-dismissable alert-warning">
+          {{ error_message }}
+        </div>
+        {% endif %}
+        <script type='text/javascript'>
+          window.close();
+        </script>
+    </body>
+</html>

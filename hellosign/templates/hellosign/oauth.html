@@ -1,0 +1,186 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>OAuth Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'bootstrap.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'bootswatch.css' %}">
+    <link href="{% static 'favicon.ico' %}" rel="shortcut icon" type="image/vnd.microsoft.icon">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="../bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="/" class="navbar-brand"><img alt="HelloSign" src="{%static 'logo.png' %}"></a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Themes <span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="themes">
+                <li><a href="../default/">Default</a></li>
+                <li class="divider"></li>
+                <li><a href="../amelia/">Amelia</a></li>
+                <li><a href="../cerulean/">Cerulean</a></li>
+                <li><a href="../cosmo/">Cosmo</a></li>
+                <li><a href="../cyborg/">Cyborg</a></li>
+                <li><a href="../darkly/">Darkly</a></li>
+                <li><a href="../flatly/">Flatly</a></li>
+                <li><a href="../journal/">Journal</a></li>
+                <li><a href="../lumen/">Lumen</a></li>
+                <li><a href="../readable/">Readable</a></li>
+                <li><a href="../simplex/">Simplex</a></li>
+                <li><a href="../slate/">Slate</a></li>
+                <li><a href="../spacelab/">Spacelab</a></li>
+                <li><a href="../superhero/">Superhero</a></li>
+                <li><a href="../united/">United</a></li>
+                <li><a href="../yeti/">Yeti</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="../help/">Help</a>
+            </li>
+            <li>
+              <a href="http://news.bootswatch.com">Blog</a>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Download <span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="download">
+                <li><a href="./bootstrap.min.css">bootstrap.min.css</a></li>
+                <li><a href="./bootstrap.css">bootstrap.css</a></li>
+                <li class="divider"></li>
+                <li><a href="./variables.less">variables.less</a></li>
+                <li><a href="./bootswatch.less">bootswatch.less</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://builtwithbootstrap.com/" target="_blank">Built With Bootstrap</a></li>
+            <li><a href="https://wrapbootstrap.com/?ref=bsw" target="_blank">WrapBootstrap</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <div class="bs-docs-section">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-header">
+              <h1 id="type">Embedded Request Demo</h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- Headings -->
+
+        <div class="row">
+          <div class="col-lg-12">
+            <p>This page demonstrates how you can add HelloSign OAuth to your Java-based web application to perform HelloSign requests on behalf of your users.</p>
+            <h2>Before You Begin</h2>
+            <div class="well">
+              <ol>
+                <li>Obtain an API key.<br>Sign up for an API plan <a href="https://www.hellosign.com/api/pricing">here</a>. Adding embedded signing to your website requires a Silver or Gold API plan. However, you can test the functionality for free by creating signature requests in test mode.</li>
+                <li>Obtain a Client ID.<br>Sign up for a Client ID for your application <a href="https://www.hellosign.com/oauth/createAppForm">here</a>.</li>
+                <li>Set the API key and Client ID in the settings file:
+                  <pre>hellosign/settings.py</pre>
+                </li>
+              </ol>
+            </div>
+            <h2>Try It Out</h2>
+            {% if message %}
+            <div class="alert alert-dismissable alert-success">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              {{ message }}
+            </div>
+            {% endif %}
+            {% if error_message %}
+            <div class="alert alert-dismissable alert-warning">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              {{ error_message }}
+            </div>
+            {% endif %}
+            {% if not oauth_accesstoken and not oauth_token_type %}
+            <div class="alert alert-dismissable alert-warning">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              Not currently authorized.
+            </div>
+            {% endif %}
+            <p>This demo will prompt you for authorization to send a signature request to someone on your behalf. Enter their email address and an optional name below and click "Launch Demo."</p>
+            <div class="col-lg-8">
+              <form class="form-horizontal" action="{% url 'oauth' %}" method="post">
+                {% csrf_token %}
+              <div class="form-group">
+                <div class="col-lg-6">
+                  <input class="form-control" type="text" name="name" placeholder="Signer name">
+                </div>
+                <div class="col-lg-6">
+                  <input class="form-control" type="text" name="email" placeholder="signer@example.com">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-lg-6">
+                  <button type="submit" class="btn btn-primary btn-sm" id="startButton">Launch Demo</button>
+                </div>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% include "hellosign/footer.html" %}
+
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootswatch.js' %}"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+          $('input[type=file]').bootstrapFileInput();
+        });
+        $("#startButton").click(function() {
+          // Request an OAuth token from HelloSign
+          var win = window.open(
+                  "https://www.hellosign.com/oauth/authorize?" +
+                  "response_type=code&client_id={{ client_id }}&" +
+                  "state=demo",
+                  "hellosign_oauth",
+                  "width=600,height=400");
+
+          // Poll window to see if it's closed
+          var pollTimer = setInterval(function() {
+              if (win.closed !== false) {
+                  // Cancel the polling
+                  window.clearInterval(pollTimer);
+
+                  // Assume we have authorization and submit
+                  // the form to create the signature request
+                  $('form').trigger("submit");
+              }
+          }, 200);
+          return false;
+      });
+    </script>
+  </body>
+</html>
+
+
