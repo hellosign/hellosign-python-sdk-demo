@@ -8,9 +8,9 @@ A demo app wrriten in Python for hellosign_python_sdk
 #### 1. Clone the source and install django
 
 ````bash
-git clone git@github.com:minhdanh/hellosign-demo-app.git
-cd hellosign-demo-app
-pip install django=1.6
+git clone git@github.com:HelloFax/hellosign-python-sdk-demo.git
+cd hellosign-python-sdk-demo
+pip install django
 ````
 
 #### 2. Edit settings
@@ -23,7 +23,7 @@ If you're deploying the app on Heroku, you may want to keep the sample content a
 #### 3. Start the server
 
 ````
-python manage.py runserver
+python manage.py runserver 80
 ````
 
 Or just push the code to Heroku and you're all set!
@@ -33,7 +33,10 @@ Notice that in order for the app to run correctly, you need to register your Hel
 
 1. Download ngrok (https://ngrok.com/download) and extract the zip file you've just downloaded
 
-2. Open Terminal, navigate to the folder you've just extracted ngrok to, then run `./ngrok 8000`. This will tell ngrok that you want to expose port 8000 to the Internet. This port is also the default port used when we start our app server (with `python manage.py runserver`).
-When ngrok starts, it registers a random url (such as http://6eb6eb98.ngrok.com) and then forward all traffic that reaches this url (port 80 for http or 443 for https) to your localhost on port (8000). What you need to do is to update your HelloSign settings for your app with this random url, so that the callbacks could be routed to your localhost.
+2. Open Terminal, navigate to the folder you've just extracted ngrok to, then run `./ngrok 80`. This will tell ngrok that you want to expose port 80 to the Internet.
+When ngrok starts, it registers a random url (such as http://6eb6eb98.ngrok.com) and then forwards all traffic that reaches this url (port 80 for http or 443 for https) to your local server. What you need to do is to update your HelloSign settings for your app with this random url, so that the callbacks could be routed to your localhost.
 
-3. Use the random url above instead of http://localhost:8000 to test if the app is running correctly
+3. Now change your local host configuration such that the demo app can be access via a custom domain name. Open /etc/hosts and add `127.0.0.1 my.api-demo.hellosign.com`. Visit http://my.api-demo.hellosign.com in your browser to make sure the demo app is now accessible. Then update the domain name on your HelloSign app to be my.api-demo.hellosign.com. This step is important to make the embedded signing/requesting demos work.  
+
+4. Also change the HelloSign app OAuth callback url to be http://my.api-demo.hellosign.com/oauth_callback
+
