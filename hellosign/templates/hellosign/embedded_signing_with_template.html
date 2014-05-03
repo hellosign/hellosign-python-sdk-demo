@@ -7,7 +7,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="page-header">
-              <h1 id="type">Embedded Template Request Demo</h1>
+              <h1 id="type">Embedded Signing with Template Demo</h1>
             </div>
           </div>
         </div>
@@ -16,7 +16,10 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <p>Request signatures for documents based on a HelloSign Template directly from your website. Follow the steps below to add this feature to your Java-based web application.</p>
+            <p>
+              Request signatures for documents based on a HelloSign Template directly from your website. 
+              Follow the steps below to add this feature to your Java-based web application.
+            </p>
             <h2>Before You Begin</h2>
             <div class="well">
               <ol>
@@ -39,7 +42,7 @@
             {% endif %}
             <div class="well col-lg-8">
               <div id="demoContainer">
-                <form class="form-horizontal" action="{% url 'embedded_template_requesting' %}" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" action="{% url 'embedded_signing_with_template' %}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="template" id="templateId" value="" />
                     {% csrf_token %}
                     <div id="demoForm">
