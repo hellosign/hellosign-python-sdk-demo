@@ -38,5 +38,5 @@ When ngrok starts, it registers a random url (such as http://6eb6eb98.ngrok.com)
 
 3. Now change your local host configuration such that the demo app can be access via a custom domain name. Open /etc/hosts and add `127.0.0.1 my.api-demo.hellosign.com`. Visit http://my.api-demo.hellosign.com in your browser to make sure the demo app is now accessible. Then update the domain name on your HelloSign app to be my.api-demo.hellosign.com. This step is important to make the embedded signing/requesting demos work.  
 
-4. Also change the HelloSign app OAuth callback url to be http://my.api-demo.hellosign.com/oauth_callback
+4. Also change the HelloSign app OAuth callback url to be http://my.api-demo.hellosign.com/oauth_callback and the event callback url to http://6eb6eb98.ngrok.com/event_callback.
 
