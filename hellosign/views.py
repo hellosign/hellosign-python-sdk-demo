@@ -1,5 +1,7 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
+from django.http import HttpResponse
 from hellosign_sdk.hsclient import HSClient
 from hellosign_sdk.resource.signature_request import SignatureRequest
 from hellosign_sdk.utils.exception import NoAuthMethod, BadRequest
@@ -9,8 +11,10 @@ import os
 import tempfile
 import shutil
 import json
+import traceback
 from querystring_parser import parser
 
+EVENT_OK_RESP_TOKEN = "Hello API Event Received"
 
 def index(request):
     return render_to_response('hellosign/index.html', context_instance=RequestContext(request))
@@ -154,6 +158,7 @@ def embedded_signing_with_template(request):
         })
 
 def oauth(request):
+    ''' OAuth demo page '''
 
     try:
         access_token = request.session['access_token']
@@ -215,6 +220,9 @@ def oauth(request):
         })
 
 def oauth_callback(request):
+    ''' Handles an OAuth callback.
+        Retrieves the code and exchanges it for a valid access token.
+    '''
 
     try:
         code = request.GET['code']
@@ -234,6 +242,44 @@ def oauth_callback(request):
         })
     
     return render_to_response('hellosign/oauth_callback.html', context_instance=RequestContext(request))
+
+@csrf_exempt
+def event_callback(request):
+    ''' Handles an event callback. 
+        Extracts event info, prints it out and return a successful response.
+    '''
+    try:
+
+        data = json.loads(request.POST.get('json'))
+        event = data['event']
+
+        # Verifying event hash
+        import hashlib, hmac 
+        h = hmac.new(API_KEY, (str(event['event_time']) + event['event_type']), hashlib.sha256).hexdigest()
+        valid = (h == event['event_hash'])
+        print "\n"
+        print "Hash verification: %s" % ("PASSED" if valid else "FAILED")
+
+        # Print out event info
+        print "Account: %s" % data['account_guid']
+        print "Client: %s\n" % data['client_id']
+        print "Event"
+        print "------------------"
+        print "Type: %s" % event['event_type']
+        print "Time: %s" % event['event_time']
+        print "Hash: %s" % event['event_hash']
+        print "Metadata: %s" % json.dumps(event['event_metadata'], indent=4)
+        if 'signature_request' in data:
+            print "\n"
+            print "Signature Request"
+            print "------------------"
+            print json.dumps(data['signature_request'], indent=4)
+        print "\n"
+    except BaseException, e:
+        print "ERROR: Could not process event (%s)" % e
+        traceback.print_exc()
+
+    return HttpResponse(EVENT_OK_RESP_TOKEN, content_type="html/text")
 
 def handle_uploaded_file(source):
     fd, filepath = tempfile.mkstemp(prefix=source.name, dir='/tmp/')

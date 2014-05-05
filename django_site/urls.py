@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^embedded_signing_with_template$', views.embedded_signing_with_template, name='embedded_signing_with_template'),
     url(r'^oauth$', views.oauth, name='oauth'),
     url(r'^oauth_callback', views.oauth_callback, name='oauth_callback'),
+    url(r'^event_callback', views.event_callback, name='event_callback'),
 
 )
 urlpatterns += staticfiles_urlpatterns()
