@@ -156,28 +156,33 @@ def embedded_signing_with_template(request):
 def oauth(request):
 
     try:
-        oauth_accesstoken = request.session['access_token']
-        oauth_token_type = request.session['token_type']
+        access_token = request.session['access_token']
+        token_type = request.session['token_type']
     except KeyError:
-        oauth_accesstoken = None
-        oauth_token_type = None
-
-    print "OAuth token: %s" % oauth_accesstoken
+        access_token = None
+        token_type = None
 
     if request.method == 'POST':
         try:
             user_email = request.POST['email']
             user_name = request.POST['name']
 
-            user_hsclient = HSClient(api_accesstoken=request.session['oauth_accesstoken'], api_accesstokentype=request.session['oauth_token_type'])
+            user_hsclient = HSClient(access_token=access_token, access_token_type=token_type)
 
             files = [os.path.dirname(os.path.realpath(__file__)) + "/docs/nda.pdf"]
-            signers = [{"name": user_name, "email_address": user_email}]
+            signers = [{"name": user_name, "email_address": user_email }]
             cc_email_addresses = []
+
             sr = user_hsclient.send_signature_request(
-                True, files, [], "OAuth Demo - NDA",
+                True, 
+                files, 
+                None, 
+                "OAuth Demo - NDA",
                 "The NDA we talked about", "Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                None, signers, cc_email_addresses)
+                None, 
+                signers, 
+                cc_email_addresses)
+
         except KeyError:
             return render(request, 'hellosign/oauth.html', {
                 'error_message': "Please enter both your name and email.", 
@@ -193,8 +198,8 @@ def oauth(request):
             if isinstance(sr, SignatureRequest):
                 return render(request, 'hellosign/oauth.html', {
                     'message': 'Request sent successfully.',
-                    'oauth_accesstoken': request.session['oauth_accesstoken'],
-                    'oauth_token_type': request.session['oauth_token_type'],
+                    'access_token': access_token,
+                    'token_type': token_type,
                     'client_id': CLIENT_ID
                 })
             else:
@@ -204,22 +209,21 @@ def oauth(request):
                 })
     else:
         return render(request, 'hellosign/oauth.html', {
-                'oauth_accesstoken': oauth_accesstoken,
-                'oauth_token_type': oauth_token_type,
-                'client_id': CLIENT_ID
-            })
+            'access_token': access_token,
+            'token_type': token_type,
+            'client_id': CLIENT_ID
+        })
 
 def oauth_callback(request):
+
     try:
         code = request.GET['code']
         state = request.GET['state']
         hsclient = HSClient(api_key=API_KEY)
         oauth = hsclient.get_oauth_data(code, CLIENT_ID, SECRET, state)
-        request.session['oauth_accesstoken'] = oauth.access_token
-        request.session['oauth_token_type'] = oauth.access_token_type
-
-        print "OAuth: %s" % oauth
-
+        request.session['access_token'] = oauth.access_token
+        request.session['token_type'] = oauth.access_token_type
+        print "Got OAuth Token: %s" % oauth.access_token
     except KeyError:
         return render(request, 'hellosign/oauth_callback.html', {
             'error_message': "No code or state found"
