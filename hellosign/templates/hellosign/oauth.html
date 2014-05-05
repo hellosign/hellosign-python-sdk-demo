@@ -92,7 +92,7 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <p>This page demonstrates how you can add HelloSign OAuth to your Java-based web application to perform HelloSign requests on behalf of your users.</p>
+            <p>This page demonstrates how you can add HelloSign OAuth to your web application to perform HelloSign requests on behalf of your users.</p>
             <h2>Before You Begin</h2>
             <div class="well">
               <ol>
@@ -116,7 +116,7 @@
               {{ error_message }}
             </div>
             {% endif %}
-            {% if not oauth_accesstoken and not oauth_token_type %}
+            {% if not access_token and not token_type %}
             <div class="alert alert-dismissable alert-warning">
               <button type="button" class="close" data-dismiss="alert">×</button>
               Not currently authorized.
@@ -154,31 +154,35 @@
     <script src="{% static 'bootstrap.min.js' %}"></script>
     <script src="{% static 'bootswatch.js' %}"></script>
     <script type="text/javascript">
-        $( document ).ready(function() {
-          $('input[type=file]').bootstrapFileInput();
-        });
-        $("#startButton").click(function() {
-          // Request an OAuth token from HelloSign
-          var win = window.open(
-                  "https://www.hellosign.com/oauth/authorize?" +
-                  "response_type=code&client_id={{ client_id }}&" +
-                  "state=demo",
-                  "hellosign_oauth",
-                  "width=600,height=400");
+    $(document).ready(function(){
+        $('input[type=file]').bootstrapFileInput();
+    });
 
-          // Poll window to see if it's closed
-          var pollTimer = setInterval(function() {
-              if (win.closed !== false) {
-                  // Cancel the polling
-                  window.clearInterval(pollTimer);
+    $("#startButton").click(function(){
 
-                  // Assume we have authorization and submit
-                  // the form to create the signature request
-                  $('form').trigger("submit");
-              }
-          }, 200);
-          return false;
-      });
+        // Request an OAuth token from HelloSign
+        var win = window.open(
+              "https://www.hellosign.com/oauth/authorize?" +
+              "response_type=code&client_id={{ client_id }}&" +
+              "state=demo-" + (new Date().getTime()),
+              "hellosign_oauth",
+              "width=600,height=400");
+
+        // Poll window to see if it's closed
+        var pollTimer = setInterval(function() {
+            if (win.closed !== false) {
+
+                // Cancel timer
+                window.clearInterval(pollTimer);
+
+                // Assume we have authorization and submit 
+                // the form to create the signature request
+                $('form').trigger("submit");
+            }
+        }, 200);
+
+        return false;
+    });
     </script>
   </body>
 </html>
