@@ -2,8 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.http import HttpResponse
-from hellosign_sdk.hsclient import HSClient
-from hellosign_sdk.resource.signature_request import SignatureRequest
+from hellosign_sdk import HSClient
+from hellosign_sdk.resource import SignatureRequest
 from hellosign_sdk.utils.exception import NoAuthMethod, BadRequest
 from settings import API_KEY, CLIENT_ID, SECRET
 from .forms import UploadFileForm
@@ -17,9 +17,11 @@ from querystring_parser import parser
 EVENT_OK_RESP_TOKEN = "Hello API Event Received"
 
 def index(request):
+    ''' Landing page '''
     return render_to_response('hellosign/index.html', context_instance=RequestContext(request))
 
 def embedded_signing(request):
+    ''' Embedded signing demo '''
     if request.method == 'POST':
         try:
 
@@ -31,10 +33,14 @@ def embedded_signing(request):
             signers = [{"name": user_name, "email_address": user_email}]
             cc_email_addresses = []
             sr = hsclient.send_signature_request_embedded(
-                True, CLIENT_ID, files, [], "NDA with Acme Co.",
-                "The NDA we talked about", "Please sign this NDA and then we" +
-                " can discuss more. Let me know if you have any questions.",
-                None, signers, cc_email_addresses)
+                test_mode=True, 
+                client_id=CLIENT_ID, 
+                files=files, 
+                title="NDA with Acme Co.",
+                subject="The NDA we talked about", 
+                message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
+                signers=signers, 
+                cc_email_addresses=cc_email_addresses)
             embedded = hsclient.get_embeded_object(sr.signatures[0].signature_id)
         except KeyError:
             return render(request, 'hellosign/embedded_signing.html', {
@@ -69,10 +75,17 @@ def embedded_requesting(request):
             signers = [{"name": signer_name, "email_address": signer_email}]
             cc_email_addresses = []
 
-            sr = hsclient.create_unclaimed_draft(
-                "1", CLIENT_ID, '1', user_email, files, [], "request_signature",
-                "The NDA we talked about", "Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                signers, cc_email_addresses)
+            sr = hsclient.create_embedded_unclaimed_draft(
+                test_mode=True, 
+                client_id=CLIENT_ID, 
+                is_for_embedded_signing=True, 
+                requester_email_address=user_email, 
+                files=files, 
+                draft_type="request_signature",
+                subject="The NDA we talked about", 
+                message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
+                signers=signers, 
+                cc_email_addresses=cc_email_addresses)
             
             sign_url = sr.claim_url
 
@@ -118,18 +131,18 @@ def embedded_signing_with_template(request):
                 for (key, value) in post_dict["cf"].iteritems():
                     if value:
                         custom_fields.append({key: value})
-            
-            sr = hsclient.send_signature_request_embedded_with_rf(
-                test_mode = True,
-                client_id = CLIENT_ID, 
-                reusable_form_id = template_id, 
-                title = "NDA with Acme Co.",
-                subject = "The NDA we talked about", 
-                message = "Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                signing_redirect_url = None, 
-                signers = signers, 
-                ccs = ccs,
-                custom_fields = custom_fields)
+
+            sr = hsclient.send_signature_request_embedded_with_template(
+                test_mode=True,
+                client_id=CLIENT_ID, 
+                template_id=template_id, 
+                title="NDA with Acme Co.",
+                subject="The NDA we talked about", 
+                message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
+                signing_redirect_url=None, 
+                signers=signers, 
+                ccs=ccs,
+                custom_fields=custom_fields)
             
             embedded = hsclient.get_embeded_object(sr.signatures[0].signature_id)
 
@@ -146,10 +159,10 @@ def embedded_signing_with_template(request):
                 'sign_url': str(embedded.sign_url)
             })
     else:
-        rf_list = hsclient.get_reusable_form_list()
+        template_list = hsclient.get_template_list()
         templates = [];
-        for rf in rf_list:
-            template_data = dict(rf.json_data)
+        for template in template_list:
+            template_data = dict(template.json_data)
             del template_data['accounts']
             templates.append(template_data)
         templates = json.dumps(templates)
