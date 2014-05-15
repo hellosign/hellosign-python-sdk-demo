@@ -41,7 +41,7 @@ def embedded_signing(request):
                 message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
                 signers=signers, 
                 cc_email_addresses=cc_email_addresses)
-            embedded = hsclient.get_embeded_object(sr.signatures[0].signature_id)
+            embedded = hsclient.get_embedded_object(sr.signatures[0].signature_id)
         except KeyError:
             return render(request, 'hellosign/embedded_signing.html', {
                 'error_message': "Please enter both your name and email."
@@ -144,7 +144,7 @@ def embedded_signing_with_template(request):
                 ccs=ccs,
                 custom_fields=custom_fields)
             
-            embedded = hsclient.get_embeded_object(sr.signatures[0].signature_id)
+            embedded = hsclient.get_embedded_object(sr.signatures[0].signature_id)
 
         # TODO: need some more validations here
         # except KeyError:
