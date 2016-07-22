@@ -143,7 +143,6 @@ def embedded_signing_with_template(request):
                 signers=signers,
                 ccs=ccs,
                 custom_fields=custom_fields)
-
             embedded = hsclient.get_embedded_object(sr.signatures[0].signature_id)
 
         # TODO: need some more validations here
