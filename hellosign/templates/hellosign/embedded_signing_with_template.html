@@ -17,7 +17,7 @@
         <div class="row">
           <div class="col-lg-12">
             <p>
-              Request signatures for documents based on a HelloSign Template directly from your website. 
+              Request signatures for documents based on a HelloSign Template directly from your website.
               Follow the steps below to add this feature to your web application.
             </p>
             <h2>Before You Begin</h2>
@@ -127,12 +127,16 @@
         });
     </script>
     {% if sign_url %}
-    <script type="text/javascript" src="//s3.amazonaws.com/cdn.hellofax.com/js/embedded.js"></script>
     <script type="text/javascript">
         function openSigningDialog() {
             HelloSign.init("{{ client_id }}");
             HelloSign.open({
-                url: "{{ sign_url|safe }}"
+                url         : "{{ sign_url|safe }}",
+                debug       : true,
+                allowCancel : true,
+                userCulture : HelloSign.CULTURES.EN_US,
+                uxVersion   : 2,
+                skipDomainVerification: true
             });
         }
         $( document ).ready(function() {

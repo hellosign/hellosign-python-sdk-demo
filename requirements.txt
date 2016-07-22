@@ -1,7 +1,7 @@
 Django==1.6.2
 django-debug-toolbar==1.0.1
 gunicorn==18.0
-hellosign-python-sdk==0.3.8
+hellosign-python-sdk==3.8.5
 querystring-parser==1.1
 requests==2.2.1
 sqlparse==0.1.11

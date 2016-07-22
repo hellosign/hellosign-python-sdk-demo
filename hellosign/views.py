@@ -33,15 +33,15 @@ def embedded_signing(request):
             signers = [{"name": user_name, "email_address": user_email}]
             cc_email_addresses = []
             sr = hsclient.send_signature_request_embedded(
-                test_mode=True, 
-                client_id=CLIENT_ID, 
-                files=files, 
+                test_mode=True,
+                client_id=CLIENT_ID,
+                files=files,
                 title="NDA with Acme Co.",
-                subject="The NDA we talked about", 
+                subject="The NDA we talked about",
                 message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                signers=signers, 
+                signers=signers,
                 cc_email_addresses=cc_email_addresses)
-            embedded = hsclient.get_embeded_object(sr.signatures[0].signature_id)
+            embedded = hsclient.get_embedded_object(sr.signatures[0].signature_id)
         except KeyError:
             return render(request, 'hellosign/embedded_signing.html', {
                 'error_message': "Please enter both your name and email."
@@ -52,7 +52,7 @@ def embedded_signing(request):
             })
         else:
             return render(request, 'hellosign/embedded_signing.html', {
-                'client_id': CLIENT_ID, 
+                'client_id': CLIENT_ID,
                 'sign_url': str(embedded.sign_url)
             })
     else:
@@ -65,7 +65,7 @@ def embedded_requesting(request):
             user_email = request.POST['user_email']
             signer_name = request.POST['signer_name']
             signer_email = request.POST['signer_email']
-            
+
             hsclient = HSClient(api_key=API_KEY)
 
             files = []
@@ -76,17 +76,17 @@ def embedded_requesting(request):
             cc_email_addresses = []
 
             sr = hsclient.create_embedded_unclaimed_draft(
-                test_mode=True, 
-                client_id=CLIENT_ID, 
-                is_for_embedded_signing=True, 
-                requester_email_address=user_email, 
-                files=files, 
+                test_mode=True,
+                client_id=CLIENT_ID,
+                is_for_embedded_signing=True,
+                requester_email_address=user_email,
+                files=files,
                 draft_type="request_signature",
-                subject="The NDA we talked about", 
+                subject="The NDA we talked about",
                 message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                signers=signers, 
+                signers=signers,
                 cc_email_addresses=cc_email_addresses)
-            
+
             sign_url = sr.claim_url
 
         except NoAuthMethod:
@@ -100,7 +100,7 @@ def embedded_requesting(request):
                 'sign_url': str(sign_url)
             })
     else:
-        
+
         return render_to_response('hellosign/embedded_requesting.html', context_instance=RequestContext(request))
 
 def embedded_signing_with_template(request):
@@ -125,7 +125,7 @@ def embedded_signing_with_template(request):
                 for (key, value) in post_dict["ccRole"].iteritems():
                     # if value:
                     ccs.append({'role_name': key, 'email_address': value})
-            
+
             custom_fields = []
             if 'cf' in post_dict and len(post_dict['cf']) > 0:
                 for (key, value) in post_dict["cf"].iteritems():
@@ -134,17 +134,17 @@ def embedded_signing_with_template(request):
 
             sr = hsclient.send_signature_request_embedded_with_template(
                 test_mode=True,
-                client_id=CLIENT_ID, 
-                template_id=template_id, 
+                client_id=CLIENT_ID,
+                template_id=template_id,
                 title="NDA with Acme Co.",
-                subject="The NDA we talked about", 
+                subject="The NDA we talked about",
                 message="Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                signing_redirect_url=None, 
-                signers=signers, 
+                signing_redirect_url=None,
+                signers=signers,
                 ccs=ccs,
                 custom_fields=custom_fields)
-            
-            embedded = hsclient.get_embeded_object(sr.signatures[0].signature_id)
+
+            embedded = hsclient.get_embedded_object(sr.signatures[0].signature_id)
 
         # TODO: need some more validations here
         # except KeyError:
@@ -192,18 +192,18 @@ def oauth(request):
             cc_email_addresses = []
 
             sr = user_hsclient.send_signature_request(
-                True, 
-                files, 
-                None, 
+                True,
+                files,
+                None,
                 "OAuth Demo - NDA",
                 "The NDA we talked about", "Please sign this NDA and then we can discuss more. Let me know if you have any questions.",
-                None, 
-                signers, 
+                None,
+                signers,
                 cc_email_addresses)
 
         except KeyError:
             return render(request, 'hellosign/oauth.html', {
-                'error_message': "Please enter both your name and email.", 
+                'error_message': "Please enter both your name and email.",
                 'client_id': CLIENT_ID
             })
         except NoAuthMethod:
@@ -253,12 +253,12 @@ def oauth_callback(request):
         return render(request, 'hellosign/oauth_callback.html', {
             'error_message': str(e)
         })
-    
+
     return render_to_response('hellosign/oauth_callback.html', context_instance=RequestContext(request))
 
 @csrf_exempt
 def event_callback(request):
-    ''' Handles an event callback. 
+    ''' Handles an event callback.
         Extracts event info, prints it out and return a successful response.
     '''
     try:
@@ -267,7 +267,7 @@ def event_callback(request):
         event = data['event']
 
         # Verifying event hash
-        import hashlib, hmac 
+        import hashlib, hmac
         h = hmac.new(API_KEY, (str(event['event_time']) + event['event_type']), hashlib.sha256).hexdigest()
         valid = (h == event['event_hash'])
         print "\n"

@@ -66,12 +66,16 @@
     <script src="{% static 'bootstrap.min.js' %}"></script>
     <script src="{% static 'bootswatch.js' %}"></script>
     {% if sign_url %}
-    <script type="text/javascript" src="//s3.amazonaws.com/cdn.hellofax.com/js/embedded.js"></script>
     <script type="text/javascript">
         function openSigningDialog() {
             HelloSign.init("{{ client_id }}");
             HelloSign.open({
-                url: "{{ sign_url|safe }}"
+                url         : "{{ sign_url|safe }}",
+                debug       : true,
+                allowCancel : true,
+                userCulture : HelloSign.CULTURES.EN_US,
+                uxVersion   : 2,
+                skipDomainVerification: true
             });
         }
         $( document ).ready(function() {
