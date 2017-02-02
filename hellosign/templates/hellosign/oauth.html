@@ -20,7 +20,7 @@
             <div class="well">
               <ol>
                 <li>Obtain an API key.<br>Sign up for an API plan <a href="https://www.hellosign.com/api/pricing">here</a>. Adding embedded signing to your website requires a Silver or Gold API plan. However, you can test the functionality for free by creating signature requests in test mode.</li>
-                <li>Obtain a Client ID.<br>Sign up for a Client ID for your application <a href="https://www.hellosign.com/oauth/createAppForm">here</a>.</li>
+                <li>Obtain a Client ID.<br>Sign up for a Client ID for your application <a href="https://app.hellosign.com/oauth/createAppForm">here</a>.</li>
                 <li>Set the API key and Client ID in the settings file:
                   <pre>hellosign/settings.py</pre>
                 </li>
@@ -85,7 +85,7 @@
 
         // Request an OAuth token from HelloSign
         var win = window.open(
-              "https://www.hellosign.com/oauth/authorize?" +
+              "https://app.hellosign.com/oauth/authorize?" +
               "response_type=code&client_id={{ client_id }}&" +
               "state=demo-" + (new Date().getTime()),
               "hellosign_oauth",
