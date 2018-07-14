@@ -8,7 +8,7 @@ A demo app wrriten in Python for hellosign_python_sdk
 #### 1. Clone the source and install django
 
 ````bash
-git clone git@github.com:HelloFax/hellosign-python-sdk-demo.git
+git clone git@github.com:hellosign/hellosign-python-sdk-demo.git
 cd hellosign-python-sdk-demo
 pip install django
 ````
